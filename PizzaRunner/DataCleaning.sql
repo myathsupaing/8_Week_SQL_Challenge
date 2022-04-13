@@ -7,64 +7,78 @@
 - TRIM.
 
 --TABLE: customer_orders
+--tasks:
 --exclusion - remove nulls and replace with ' '
 --extras - remove nulls and replace with ' '
 
-CREATE TEMP TABLE customer_orders_temp AS
-SELECT 
-  order_id, 
-  customer_id, 
-  pizza_id,
-  order_time,
-  CASE
-	  WHEN exclusions IS null OR exclusions LIKE 'null' THEN ' '
-	  ELSE exclusions
-	  END AS exclusions,
-  CASE
-	  WHEN extras IS NULL or extras LIKE 'null' THEN ' '
-	  ELSE extras
-	  END AS extras,
-FROM pizza_runner.customer_orders;
+-- Copying data to new table
+drop table if exists customer_orders1;
+CREATE TABLE customer_orders1 AS
+SELECT *
+FROM customer_orders;
+
+-- Cleaning data
+UPDATE customer_orders1
+SET
+exclusions = CASE 
+		WHEN exclusions IS NULL OR 'null' THEN ' '
+		else exclusions
+		end,
+extras = CASE
+	     WHEN extras IS NULL OR 'null' THEN ' '
+	     else extras
+	     end;
 
 --TABLE: runner_orders
+--tasks:
+--pickuptime - remove nulls and replace with ' '
+--distance - remove nulls and replace with ' '
+--duration - remove nulls and replace with ' '
+--duration - remove nulls and replace with ' '
+--distance - trim 'km' with ' '
+--duration - trim 'minutes', 'min', 'minute' with ' '
 
---pickup_time - remove nulls and replace with ' '
---distance - remove km and nulls
---duration - remove minutes and nulls
---cancellation - remove NULL and null and replace with ' '
+--copying data to new table
+CREATE TABLE runner_orders2 AS
+SELECT *
+FROM runner_orders;
 
-CREATE TEMP TABLE runner_orders_temp AS
-SELECT 
-  order_id, 
-  runner_id,  
-  CASE
-	  WHEN pickup_time LIKE 'null' THEN ' '
-	  ELSE pickup_time
-	  END AS pickup_time,
-  CASE
-	  WHEN distance LIKE 'null' THEN ' '
-	  WHEN distance LIKE '%km' THEN TRIM('km' from distance)
-	  ELSE distance 
-    END AS distance,
-  CASE
-	  WHEN duration LIKE 'null' THEN ' '
-	  WHEN duration LIKE '%mins' THEN TRIM('mins' from duration)
-	  WHEN duration LIKE '%minute' THEN TRIM('minute' from duration)
-	  WHEN duration LIKE '%minutes' THEN TRIM('minutes' from duration)
-	  ELSE duration
-	  END AS duration,
-  CASE
-	  WHEN cancellation IS NULL or cancellation LIKE 'null' THEN ' '
-	  ELSE cancellation
-	  END AS cancellation
-FROM pizza_runner.runner_orders;
+-- cleaning data
+UPDATE runner_orders1
+SET
+pickup_time = CASE
+	  	WHEN pickup_time IS 'null' THEN ' '
+	  	ELSE pickup_time
+	  	END,
+        
+distance =  CASE
+	  	   WHEN distance IS 'null' THEN ' '
+	  	   ELSE distance
+	  	   END,
+
+duration =  CASE
+	  	   WHEN duration IS 'null' THEN ' '
+	  	   ELSE duration
+	  	   END,
+          
+cancellation =  CASE
+	  	   WHEN cancellation IS 'null' THEN ' '
+	  	   ELSE cancellation
+	  	   END;
+		   
+--trimming data		   
+UPDATE runner_orders1
+SET
+distance = replace(distance,'km','')
+duration = REPLACE(REPLACE(replace(duration,'minutes',''),'mins', ''),'minute','')
 
 --TABLE: runner_orders
+--tasks:
 --pickup_time - DATETIME format
 --distance - FLOAT format
 --cancellation - INT format
 
-ALTER TABLE runner_orders_temp
+ALTER TABLE runner_orders1
 ALTER COLUMN pickup_time DATETIME,
 ALTER COLUMN distance FLOAT,
 ALTER COLUMN duration INT;
