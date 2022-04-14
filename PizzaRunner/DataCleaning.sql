@@ -27,7 +27,7 @@ exclusions = CASE
 		else exclusions
 		end,
 extras = CASE
-	     WHEN extras IS 'null' THEN ' '
+	     WHEN extras IS NULL or 'null' THEN ' '
 	     else extras
 	     end;
 
