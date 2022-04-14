@@ -23,11 +23,11 @@ FROM customer_orders;
 UPDATE customer_orders1
 SET
 exclusions = CASE 
-		WHEN exclusions IS NULL OR 'null' THEN ' '
+		WHEN exclusions IS 'null' THEN ' '
 		else exclusions
 		end,
 extras = CASE
-	     WHEN extras IS NULL OR 'null' THEN ' '
+	     WHEN extras IS 'null' THEN ' '
 	     else extras
 	     end;
 
