@@ -1,10 +1,12 @@
 --SQL functions:
-- CREATE TEMP TABLE,
-- ALTER TABLE,
-- ALTER COLUMN,
+- DROP TABLE,
+- CREATE TABLE AS,
+- UPDATE SET,
 - CASE WHEN,
-- "%" filtering,
-- REPLACE.
+- OR,
+- REPLACE,
+- ALTER TABLE, and
+- ALTER COLUMN.
 
 --TABLE: customer_orders
 --tasks:
@@ -12,7 +14,7 @@
 --extras - remove nulls and replace with ' '
 
 -- Copying data to new table
-drop table if exists customer_orders1;
+DROP TABLE if exists customer_orders1;
 CREATE TABLE customer_orders1 AS
 SELECT *
 FROM customer_orders;
