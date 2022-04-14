@@ -18,7 +18,7 @@ FROM customer_orders1;
 
 ### Q2. How many unique customer orders were made?
 ````sql
-SELECT count(distinct order_id) total_orders
+SELECT COUNT(DISTINCT order_id) total_orders
 FROM customer_orders1;
 ````
 
@@ -33,7 +33,7 @@ FROM customer_orders1;
 SELECT runner_id,
        count(order_id) orders_delivered
 FROM runner_orders1
-WHERE cancellation != ' '
+WHERE distance IS NOT ' '
 GROUP BY runner_id;
 ````
 
@@ -41,7 +41,7 @@ GROUP BY runner_id;
 |-----------|------------------|
 | 1         | 4                |
 | 2         | 3                |
-| 3         | 2                |
+| 3         | 1                |
 
 - runner_id 1 got the most order deliveries.
 
@@ -54,26 +54,26 @@ JOIN runner_orders1 r
 ON c.order_id = r.order_id
 JOIN pizza_names p
 ON p.pizza_id = c.pizza_id
-WHERE r.cancellation != ' '
+WHERE r.distance IS NOT ' '
 GROUP BY  c.pizza_id;
 ````
 
 | pizza_names | orders_delivered |
 |-------------|------------------|
-| Meatlovers  | 10               |
-| Vegetarian  | 4                |
+| Meatlovers  | 9                |
+| Vegetarian  | 3                |
 
 - Meat pizzas were preferred to vegetarian.
 
 #### Q5. How many Vegetarian and Meatlovers were ordered by each customer?
 ````sql
-SELECT customer_id,
-       pizza_name,
-       COUNT(pizza_id) pizza_orders
+SELECT c.customer_id,
+       p.pizza_name,
+       COUNT(p.pizza_id) pizza_orders
 FROM customer_orders1 c
 JOIN pizza_names p
   ON c.pizza_id = p.pizza_id
-GROUP BY c.customer_id, p.pizza_names
+GROUP BY c.customer_id, p.pizza_name
 ORDER BY c.customer_id;
 ````
 
@@ -97,7 +97,7 @@ SELECT c.order_id,
 FROM customer_orders1 AS c
 JOIN runner_orders1 AS r
   ON c.order_id = r.order_id
-WHERE r.cancellation != ' '
+WHERE r.distance IS NOT ' '
 GROUP BY c.order_id
 ORDER BY pizza_per_order DESC
 LIMIT 1;
@@ -114,17 +114,17 @@ LIMIT 1;
 SELECT 
   c.customer_id,
   SUM(
-    CASE WHEN c.exclusions <> ' ' OR c.extras <> ' ' THEN 1
+    CASE WHEN c.exclusions is not ' ' OR c.extras is not ' ' THEN 1
     ELSE 0
     END) AS at_least_1_change,
   SUM(
-    CASE WHEN c.exclusions = ' ' AND c.extras = ' ' THEN 1 
+    CASE WHEN c.exclusions is ' ' AND c.extras is ' ' THEN 1 
     ELSE 0
     END) AS no_change
-FROM customer_orders AS c
-JOIN runner_orders AS r
+FROM customer_orders1 c
+JOIN runner_orders1 r
   ON c.order_id = r.order_id
-WHERE r.cancellation != ' '
+WHERE r.distance IS NOT ' '
 GROUP BY c.customer_id
 ORDER BY c.customer_id;
 ````
@@ -147,10 +147,10 @@ SELECT
     CASE WHEN exclusions IS NOT NULL AND extras IS NOT NULL THEN 1
     ELSE 0
     END) AS both_exclusion_extras
-FROM customer_orders AS c
-JOIN #runner_orders AS r
+FROM customer_orders1 AS c
+JOIN runner_orders1 AS r
   ON c.order_id = r.order_id
-WHERE r.cancellation != ' ' 
+WHERE r.distance IS NOT NULL
   AND exclusions <> ' ' 
   AND extras <> ' ';
   ````
@@ -165,9 +165,9 @@ WHERE r.cancellation != ' '
 #### Q9. What was the total volume of pizzas ordered for each hour of the day?
 ````sql
 SELECT 
-  EXTRACT(HOUR FROM pickup_time) hour_of_day, 
+  HOUR (pickup_time) hour_of_day, 
   COUNT(order_id) AS pizza_count
-FROM customer_orders
+FROM customer_orders1
 GROUP BY hour_of_day;
 ````
 
@@ -185,9 +185,9 @@ GROUP BY hour_of_day;
 
 #### Q10. What was the volume of orders for each day of the week?
 ````sql
-SELECT dayname(order_time) daily_data, count(order_id) pizza_orders
+SELECT DAYOFWEEK(order_time) daily_data, COUNT(order_id) pizza_orders
 FROM customer_orders1
-GROUP BY Dailydata;
+GROUP BY daily_data;
 ````
 
 | daily_data | pizza_orders |
