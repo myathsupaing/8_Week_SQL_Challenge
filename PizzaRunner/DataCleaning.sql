@@ -4,7 +4,7 @@
 - ALTER COLUMN,
 - CASE WHEN,
 - "%" filtering,
-- TRIM.
+- REPLACE.
 
 --TABLE: customer_orders
 --tasks:
@@ -39,7 +39,7 @@ extras = CASE
 --duration - trim 'minutes', 'min', 'minute' with ' '
 
 --copying data to new table
-CREATE TABLE runner_orders2 AS
+CREATE TABLE runner_orders1 AS
 SELECT *
 FROM runner_orders;
 
@@ -62,14 +62,14 @@ duration =  CASE
 	  	   END,
           
 cancellation =  CASE
-	  	   WHEN cancellation IS 'null' THEN ' '
+	  	   WHEN cancellation IS NULL OR 'null' THEN ' '
 	  	   ELSE cancellation
 	  	   END;
 		   
 --trimming data		   
 UPDATE runner_orders1
 SET
-distance = replace(distance,'km','')
+distance = replace(distance,'km',''),
 duration = REPLACE(REPLACE(replace(duration,'minutes',''),'mins', ''),'minute','')
 
 --TABLE: runner_orders
