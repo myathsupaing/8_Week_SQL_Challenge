@@ -65,7 +65,7 @@ WITH cte_sales AS
         m.product_name,
            DENSE_RANK() OVER (
              PARTITION BY s.customer_id
-             ORDER BY s.order_date) rank
+             ORDER BY s.order_date) ranks
     FROM sales s
     JOIN menu m
         ON s.product_id = m.product_id)
@@ -76,7 +76,7 @@ SELECT
 FROM cte_sales s
 JOIN menu m
 	ON s.product_id = m.product_id
-WHERE rank = 1
+WHERE ranks = 1
 GROUP BY s.customer_id,
 	m.product_name;
 ````
@@ -129,7 +129,7 @@ WITH cte_top_sales AS
     COUNT(s.product_id) order_count,
     DENSE_RANK() OVER (
 	 PARTITION BY s.customer_id
-	 ORDER BY COUNT(s.product_id) DESC) rank
+	 ORDER BY COUNT(s.product_id) DESC) ranks
     FROM sales s
     JOIN menu m
         ON s.product_id = m.product_id
@@ -140,8 +140,8 @@ SELECT
     product_name,
     order_count
 FROM cte_top_sales
-WHERE rank = 1
-GROUP BY s.customer_id, m.product_name;
+WHERE ranks = 1
+GROUP BY customer_id, product_name;
 ````
 
 #### Answer:
@@ -170,12 +170,12 @@ WITH cte_member_sales AS
     s.product_id,
     DENSE_RANK() OVER(
        PARTITION BY s.customer_id
-       ORDER BY s.order_date) rank
+       ORDER BY s.order_date) ranks
  FROM sales s
  JOIN members m2
     ON s.customer_id = m2.customer_id
  WHERE s.order_date >= m2.join_date
- GROUP BY s.customer_id, s.product_id)
+ GROUP BY s.customer_id, s.order_date, m2.join_date, s.product_id)
 
 SELECT
     m2.customer_id,
@@ -183,7 +183,7 @@ SELECT
 FROM cte_member_sales m2
 JOIN menu m
     ON m2.product_id = m.product_id
-WHERE rank = 1
+WHERE ranks = 1
 GROUP BY m2.customer_id, m.product_name;
 ````
 
@@ -210,12 +210,12 @@ WITH cte_prior_membership_sales AS
      s.product_id,
      DENSE_RANK() OVER(
        PARTITION BY s.customer_id
-       ORDER BY s.order_date DESC) rank
+       ORDER BY s.order_date DESC) ranks
  FROM sales s
  JOIN members m2
  	ON s.customer_id = m2.customer_id
     WHERE s.order_date < m2.join_date
-    GROUP BY s.customer_id, s.product_id)
+    GROUP BY s.customer_id, s.order_date, m2.join_date, s.product_id)
 
 SELECT
     m2.customer_id,
@@ -223,8 +223,9 @@ SELECT
 FROM cte_prior_membership_sales m2
 JOIN menu m
     ON m2.product_id = m.product_id
-WHERE rank = 1
-GROUP BY m2.customer_id, m.product_name;
+WHERE ranks = 1
+GROUP BY m2.customer_id, m.product_name
+ORDER BY m2.customer_id;
 ````
 
 #### Answer:
@@ -308,7 +309,7 @@ WITH cte_membership AS (
     SELECT
   	customer_id,
   	join_date,
-        DATE(join_date, '+ 6 DAY') valid_date
+        DATE_ADD(join_date, INTERVAL 6 DAY) valid_date
     FROM members)
 	
 SELECT 
@@ -324,7 +325,8 @@ JOIN sales s
 JOIN menu m
 	ON m.product_id = s.product_id
 WHERE s.order_date <= '2021-01-31'
-GROUP BY s.customer_id;
+GROUP BY s.customer_id
+ORDER BY s.customer_id;
 ````
 
 #### Answer:
@@ -351,11 +353,11 @@ SELECT
    CASE
       WHEN m2.join_date <= s.order_date THEN 'Y'
       ELSE 'N'
-      END member
+      END AS member
 FROM sales s
-JOIN menu m
+LEFT JOIN menu m
    ON s.product_id = m.product_id
-JOIN members m2
+LEFT JOIN members m2
    ON s.customer_id = m2.customer_id;
  ````
  
@@ -393,11 +395,11 @@ WITH cte_summary AS
 	WHEN m2.join_date > s.order_date THEN 'N'
 	WHEN m2.join_date <= s.order_date THEN 'Y'
 	ELSE 'N'
-        END member
+        END AS member
 FROM sales s
-JOIN menu m
+LEFT JOIN menu m
    ON s.product_id = m.product_id
-JOIN members m2
+LEFT JOIN members m2
    ON s.customer_id = m2.customer_id)
 
 SELECT *,
@@ -407,7 +409,7 @@ SELECT *,
            RANK () OVER(
                PARTITION BY customer_id, member
                ORDER BY order_date) 
-           END rank
+           END ranks
 FROM cte_summary;
 
 ````
