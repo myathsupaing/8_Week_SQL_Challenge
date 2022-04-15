@@ -1,4 +1,4 @@
-# Date Cleaning
+# Data Cleaning
 
 ## SQL functions:
 - DROP TABLE,
@@ -47,9 +47,9 @@ extras = CASE
 After cleaning the data, the 'customer_orders1' table would look like the one below.
 <img width="1058" alt="image" src="https://user-images.githubusercontent.com/81607668/129472551-fe3d90a0-1e8b-4f32-a2a7-2ecd3ac469ef.png">
 
-## TABLE: runner_orders
+## TABLE: Runner_orders
  To clean the 'runner_orders' table,
-- a new table called 'runner_orders1' was created in order to avoid any loss of the original data
+- a new table called 'runner_orders1' was created in order to avoid any loss of the original data,
 - null values were removed, using CASE WHEN () function, and
 - units were removed, using REPLACT () function.
 
@@ -62,14 +62,14 @@ Tasks:
 - distance - trim 'km' with ' '
 - duration - trim 'minutes', 'min', 'minute' with ' '
 
-### copying data to new table
+### Copying data to new table
 ````sql
 CREATE TABLE runner_orders1 AS
 SELECT *
 FROM runner_orders;
 ````
 
-### cleaning data
+### Cleaning data
 ````sql
 UPDATE runner_orders1
 SET
@@ -94,7 +94,7 @@ cancellation =  CASE
 	  	   END;
 ````
 
-### trimming data		   
+### Trimming data		   
 ````sql
 UPDATE runner_orders1
 SET
