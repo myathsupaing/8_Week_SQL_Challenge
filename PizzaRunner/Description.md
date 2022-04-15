@@ -21,7 +21,7 @@ Data analysis performed on
 - pizza_toppings,
 - runners, and
 - runners_orders.
-- After looking through the datesets, some missing data were found so, before using them, data cleaning must be done first.
+- After looking through the datesets, some missing data were found so, before using them, [data cleaning](https://github.com/myathsupaing/8_Week_SQL_Challenge/blob/main/PizzaRunner/DataCleaning.sql) must be done first.
 
 ## Entity Relationship Diagram
 
