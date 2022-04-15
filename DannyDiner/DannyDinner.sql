@@ -77,7 +77,7 @@ WITH cte_sales AS
         m.product_name,
            DENSE_RANK() OVER (
              PARTITION BY s.customer_id
-             ORDER BY s.order_date) rank
+             ORDER BY s.order_date) ranks
     FROM sales s
     JOIN menu m
         ON s.product_id = m.product_id)
@@ -88,7 +88,7 @@ SELECT
 FROM cte_sales s
 JOIN menu m
 	ON s.product_id = m.product_id
-WHERE rank = 1
+WHERE ranks = 1
 GROUP BY s.customer_id,
 	m.product_name;
 
@@ -114,7 +114,7 @@ WITH cte_top_sales AS
     COUNT(s.product_id) as order_count,
     DENSE_RANK() OVER (
 	 PARTITION BY s.customer_id
-	 ORDER BY COUNT(s.product_id) DESC) rank
+	 ORDER BY COUNT(s.product_id) DESC) ranks
     FROM sales s
     JOIN menu m
         ON s.product_id = m.product_id
@@ -125,8 +125,8 @@ SELECT
     product_name,
     order_count
 FROM cte_top_sales
-WHERE rank = 1
-GROUP BY s.customer_id, m.product_name;
+WHERE ranks = 1
+GROUP BY customer_id, product_name;
 
 --6. Which item was purchased first by the customer after they became a member?
 --member> first_item (each member> item_purchased after membership, order date, rank)
@@ -138,12 +138,12 @@ WITH cte_member_sales AS
     s.product_id,
     DENSE_RANK() OVER(
        PARTITION BY s.customer_id
-       ORDER BY s.order_date) rank
+       ORDER BY s.order_date) ranks
  FROM sales s
  JOIN members m2
     ON s.customer_id = m2.customer_id
  WHERE s.order_date >= m2.join_date
- GROUP BY s.customer_id, s.product_id)
+ GROUP BY s.customer_id, s.order_date, m2.join_date, s.product_id)
 
 SELECT
     m2.customer_id,
@@ -151,7 +151,7 @@ SELECT
 FROM cte_member_sales m2
 JOIN menu m
     ON m2.product_id = m.product_id
-WHERE rank = 1
+WHERE ranks = 1
 GROUP BY m2.customer_id, m.product_name;
 
 
@@ -165,12 +165,12 @@ WITH cte_prior_membership_sales AS
      s.product_id,
      DENSE_RANK() OVER(
        PARTITION BY s.customer_id
-       ORDER BY s.order_date DESC) rank
+       ORDER BY s.order_date DESC) ranks
  FROM sales s
  JOIN members m2
  	ON s.customer_id = m2.customer_id
     WHERE s.order_date < m2.join_date
-    GROUP BY s.customer_id, s.product_id)
+    GROUP BY s.customer_id, s.order_date, m2.join_date, s.product_id)
 
 SELECT
     m2.customer_id,
@@ -178,8 +178,9 @@ SELECT
 FROM cte_prior_membership_sales m2
 JOIN menu m
     ON m2.product_id = m.product_id
-WHERE rank = 1
-GROUP BY m2.customer_id, m.product_name;
+WHERE ranks = 1
+GROUP BY m2.customer_id, m.product_name
+ORDER BY m2.customer_id;
 
 --8. What is the total items and amount spent for each member before they became a member?
 --each member> before membership, total items, spending
@@ -211,18 +212,18 @@ SELECT
 FROM cte_points_multiplier p
 JOIN sales s
 	ON s.product_id = p.product_id
-GROUP BY s.customer_id;
+GROUP BY s.customer_id
+ORDER BY s.customer_id;
 
 
 --10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
 --sushi> 2x points, member (within first week, including join date) > 2x points
-
-WITH cte_membership AS (
-    SELECT
-  	customer_id,
-  	join_date,
-        DATE(join_date, '+ 6 DAY') valid_date
-    FROM members)
+WITH cte_membership AS
+(SELECT
+    customer_id,
+    join_date,
+    DATE_ADD(join_date, INTERVAL 6 DAY) valid_date
+FROM members)
 	
 SELECT 
     m2.customer_id,
@@ -253,12 +254,13 @@ SELECT
    CASE
       WHEN m2.join_date <= s.order_date THEN 'Y'
       ELSE 'N'
-      END member
+   END AS member
 FROM sales s
-JOIN menu m
+LEFT JOIN menu m
    ON s.product_id = m.product_id
-JOIN members m2
-   ON s.customer_id = m2.customer_id;
+LEFT JOIN members m2
+   ON s.customer_id = m2.customer_id
+ORDER BY s.customer_id;
 
 -- Rank All The Things
 -- Recreate the table with: customer_id, order_date, product_name, price, member (Y/N), ranking(null/123)
@@ -272,12 +274,13 @@ WITH cte_summary AS
 	WHEN m2.join_date > s.order_date THEN 'N'
 	WHEN m2.join_date <= s.order_date THEN 'Y'
 	ELSE 'N'
-        END member
+    END AS member
 FROM sales s
-JOIN menu m
+LEFT JOIN menu m
    ON s.product_id = m.product_id
-JOIN members m2
-   ON s.customer_id = m2.customer_id)
+LEFT JOIN members m2
+   ON s.customer_id = m2.customer_id
+ORDER BY s.customer_id)
 
 SELECT *,
        CASE
@@ -286,5 +289,5 @@ SELECT *,
            RANK () OVER(
                PARTITION BY customer_id, member
                ORDER BY order_date) 
-           END rank
+           END ranks
 FROM cte_summary;
