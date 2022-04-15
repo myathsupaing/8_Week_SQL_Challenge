@@ -1,5 +1,15 @@
 # Case Study #1: Danny's Diner
-
+I’m using MySQL via MySQL Workbench and the functions used for data analysis are:
+- CREATE TABLE statement
+- INSERT INTO VALUES statement
+- SELECT, FROM, WHERE, ORDER BY, LIMIT, GROUP BY
+- Aggregate Functions - SUM, COUNT, COUNT(DISTINCT())
+- CASE WHEN statement
+- Temp tables: CTE : WITH AS ()
+- DENSE_RANK() OVER (PARTITION BY ORDER BY) function
+- DATE functions  - DATE_ADD
+- JOINS — JOIN, LEFT JOIN
+- Arithematic Operators - *
 
 ## Solution
 
