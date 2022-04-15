@@ -1,15 +1,18 @@
-# 8_Week_SQL_Challenge
+# Case Study 1# Danny's Diner
 Data analysis performed on Danny's starts-up business, named Danny’s Diner that sells 3 dishes: sushi, curry and ramen.
+
+## Tools Used
+- MySQL via MySQL Workbench
 
 ## Background
 Danny wants some help with upcoming business plan, with the use of some customer data collected during few montsh of operations.
 
-# Datasets
+## Datasets
 - "sales" table,
 - "members" table, and
 - "menu" table
 
-# Problem Statement
+## Problem Statement
 - Customers' visiting patterns
 - The money they spent, and
 - Their favorite food
@@ -18,7 +21,7 @@ Table 1. Entity Relationship Diagram
 
 <img src="https://user-images.githubusercontent.com/81607668/127727503-9d9e7a25-93cb-4f95-8bd0-20b87cb4b459.png" alt="Image" width="500" height="520">
 
-# Project Objectives
+## Project Objectives
 - What is the total amount each customer spent at the restaurant?
 - How many days has each customer visited the restaurant?
 - What was the first item from the menu purchased by each customer?
