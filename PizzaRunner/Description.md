@@ -11,6 +11,9 @@ Data analysis performed on
 - the recruitment for his delivery service, named "Pizza Runner", and
 - the ingredient list for the customers' orders
 
+## Tools Used
+- MySQL via MySQL Workbench
+
 ## Datasets
 - customer_orders,
 - pizza_names,
@@ -18,6 +21,7 @@ Data analysis performed on
 - pizza_toppings,
 - runners, and
 - runners_orders.
+- After looking through the datesets, some missing data were found so, before using them, data cleaning must be done first.
 
 ## Entity Relationship Diagram
 
