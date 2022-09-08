@@ -39,3 +39,5 @@ Table 1. Entity Relationship Diagram
 - What is the total items and amount spent for each member before they became a member?
 - If each $1 spent equates to 10 points and sushi has a 2x points multiplier — how many points would each customer have?
 - In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi — how many points do customer A and B have at the end of January?
+
+You can view the solution [here](https://github.com/myathsupaing/8_Week_SQL_Challenge/blob/main/Case%20Study%20%231%20Danny%20Diner/Solution.md).
