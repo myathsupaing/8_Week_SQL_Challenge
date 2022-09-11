@@ -4,7 +4,6 @@
 
 ## Solution
 
-### A. Customer Journey
 ### 1. How many customers has Foodie-Fi ever had?
 ````sql
 SELECT
