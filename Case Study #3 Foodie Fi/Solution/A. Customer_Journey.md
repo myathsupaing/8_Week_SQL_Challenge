@@ -44,3 +44,5 @@ but after 3 to 4 months of using the service, customer 13 susbcribed to pro mont
 
 We need to find out which service generate more revenues to the company
 and how we can encourage our current and potential customers to buy the plan, which is more profitable to the firm, by setting new pricing and promotional strategies.
+
+***
