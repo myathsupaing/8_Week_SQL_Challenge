@@ -76,7 +76,7 @@ To analyze if the firm is growing or shrinking
 To analyze which subscription plan brings more revenue to the firm
 - Average revenue per customer for each subscription
 
-To analyze which plan generates more profits since more revenues isn't always equal to more profits to the firm that some incurs more costs to the firm, leaving with less profits.
+To analyze which plan generates more profits (since more revenues isn't always equal to more profits to the firm that some incurs more costs to the firm, leaving with less profits)
 - Profit margin by plans
 
 To find out if the current marketing campaign works well
@@ -85,15 +85,15 @@ To find out if the current marketing campaign works well
 Just as acquiring a new customer can cost five times more than retaining an existing customer, we also need to analyze the following metrics.
 - Customer retention rate
 - Churn rate (trial to churn & trial to paying plan to churn) (i.e. number of uninstalls)
-- Number of active customers by plans (Daily & monthly)
+- Number of active customers by plans (daily & monthly)
 - Free trial conversion rate
 
 ### 3. What are some key customer journeys or experiences that you would analyse further to improve customer retention?
 - User interface
 - Market segmentation
 - App crashes rate
-- Engagement (Daily & monthly active users, average session lengths and intervals)
-- Reachability percentage (Opt-in rate and click-through rate) (i.e. push notifications)
+- Engagement (daily & monthly active users, average session lengths and intervals)
+- Reachability percentage (opt-in rate and click-through rate) (i.e. push notifications)
 
 ### 4. If the Foodie-Fi team were to create an exit survey shown to customers who wish to cancel their subscription, what questions would you include in the survey?
 1. Why do you cancel the subscription?
@@ -115,7 +115,7 @@ Just as acquiring a new customer can cost five times more than retaining an exis
 - Targeted push notification
 - Others (Please explain......)
 
-### 5.What business levers could the Foodie-Fi team use to reduce the customer churn rate? How would you validate the effectiveness of your ideas?
+### 5. What business levers could the Foodie-Fi team use to reduce the customer churn rate? How would you validate the effectiveness of your ideas?
 Features to be enhanced or added:
 - Impressive onboarding and user-friendly UX
 - Push notifications (offering limited time coupons)
