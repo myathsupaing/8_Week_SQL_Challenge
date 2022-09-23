@@ -13,81 +13,87 @@ WITH months AS (
 SELECT
 	plan_id,
 	MONTH(start_date) AS months,
-    YEAR(start_date) AS years,
+	YEAR(start_date) AS years,
 	COUNT(customer_id) AS current_customers
 FROM subscriptions AS s
 GROUP BY
 	plan_id,
 	months,
-    years)
+	years)
 
 SELECT
 	months,
-    current_customers,
-    LAG(current_customers, 1) OVER(ORDER BY months) AS previous_customers,
-    100 * (COUNT(customer_id) OVER(ORDER BY months) - LAG(COUNT(customer_id), 1) OVER(ORDER BY months)) / LAG(COUNT(customer_id), 1) OVER(ORDER BY months) AS growth_rate
+	current_customers,
+	LAG(current_customers, 1) OVER(ORDER BY months) AS previous_customers,
+	100 * (COUNT(customer_id) OVER(ORDER BY months) - LAG(COUNT(customer_id), 1) OVER(ORDER BY months)) /
+		LAG(COUNT(customer_id), 1) OVER(ORDER BY months) AS growth_rate
 FROM subscriptions AS s
 	JOIN plans AS p
-    ON s.plan_id = p.plan_id
-    JOIN months AS m
-    ON s.plan_id = m.plan_id
+	ON s.plan_id = p.plan_id
+	JOIN months AS m
+	ON s.plan_id = m.plan_id
 WHERE
 	s.plan_id != 0
 	AND s.plan_id != 4
 GROUP BY
-    months,
-    current_customers
+	months,
+	current_customers
 ORDER BY
-    months;
+	months;
 WITH CTE AS (
 	SELECT
 		MONTH(start_date) AS months,
 		YEAR(start_date) AS years,
 		COUNT(customer_id) AS current_customers
 	FROM subscriptions AS s
-    WHERE plan_id != 0
+    	WHERE plan_id != 0
 		AND plan_id != 4
 	GROUP BY
 		years,
 		months
 	ORDER BY
 		years,
-        months)
+        	months)
 SELECT
 	years,
-    months,
-    current_customers,
-    LAG(current_customers, 1) OVER(ORDER BY years, months) AS previous_count,
-    100 * (current_customers - LAG(current_customers, 1) OVER(ORDER BY years, months)) / LAG(current_customers, 1) OVER(ORDER BY years, months) AS percent
+	months,
+	current_customers,
+	LAG(current_customers, 1) OVER(ORDER BY years, months) AS previous_count,
+	100 * (current_customers - LAG(current_customers, 1) OVER(ORDER BY years, months)) /
+		LAG(current_customers, 1) OVER(ORDER BY years, months) AS percent
 FROM CTE
 ORDER BY
 	years,
-    months;
+    	months;
 ````
 
-<img width="407" alt="foodie_fi_q4" src="https://user-images.githubusercontent.com/84310475/191893870-88134efd-b771-431f-9e07-974bfff94ebb.png">
+<img width="407" alt="foodie_fi_q4" src="https://user-images.githubusercontent.com/84310475/191932632-ff7d3282-798e-46c1-8c99-c9a428b76d50.png">
 
 ### 2. What key metrics would you recommend Foodie-Fi management to track over time to assess performance of their overall business?
 To analyze if the firm is growing or shrinking
 - Revenue growth (annually, quarterly & monthly)
+
 To analyze which subscription plan brings more revenue to the firm
 - Average revenue per customer for each subscription
+
 To analyze which plan generates more profits since more revenues isn't always equal to more profits to the firm that some incurs more costs to the firm, leaving with less profits.
 - Profit margin by plans
+
 To find out if the current marketing campaign works well
 - Customer acquisition rate (i.e. number of new app downloads)
+
 Just as acquiring a new customer can cost five times more than retaining an existing customer, we also need to analyze the following metrics.
 - Customer retention rate
 - Churn rate (trial to churn & trial to paying plan to churn) (i.e. number of uninstalls)
-- Number of active customers by plans (Daily and monthly)
+- Number of active customers by plans (Daily & monthly)
 - Free trial conversion rate
 
 ### 3. What are some key customer journeys or experiences that you would analyse further to improve customer retention?
 - User interface
 - Market segmentation
 - App crashes rate
-- Engagement (Daily & monthly active users & average sessions lengths and intervals)
-- Reachability percentage (Opt-in rate and click-through rate)
+- Engagement (Daily & monthly active users, average session lengths and intervals)
+- Reachability percentage (Opt-in rate and click-through rate) (i.e. push notifications)
 
 ### 4. If the Foodie-Fi team were to create an exit survey shown to customers who wish to cancel their subscription, what questions would you include in the survey?
 1. Why do you cancel the subscription?
@@ -103,7 +109,7 @@ Just as acquiring a new customer can cost five times more than retaining an exis
 -  Please explain.......
 3. What feature do you think we do well? 
 - User interface
-- How to feature
+- User manual instructions
 - Customer support
 - Storage space
 - Targeted push notification
@@ -123,7 +129,7 @@ For trial users to be converted into paying customers, perceived value must be h
 - Explaining benefits of paid plans
 - Unlock paid features for a limited time
 
-Win back strategy
+Win-back strategy
 - Sending offers to churned customers or inactive users
 - Notifying new features
 
